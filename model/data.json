@@ -1,0 +1,44 @@
+[
+    {
+        "_id": 0,
+        "name": "리그 오브 레전드",
+        "genre": "AOS",
+        "year": "2011",
+        "company": "라이엇 게임즈"
+    },
+    {
+        "_id": 1,
+        "name": "마인크래프트",
+        "genre": "서바이벌",
+        "year": "2011",
+        "company": "모장"
+    },
+    {
+        "_id": 2,
+        "name": "로스트 아크",
+        "genre": "MMORPG",
+        "year": "2018",
+        "company": "스마일게이트"
+    },
+    {
+        "_id": 3,
+        "name": "배틀그라운드",
+        "genre": "배틀로얄",
+        "year": "2018",
+        "company": "PUBG"
+    },
+    {
+        "_id": 4,
+        "name": "오버워치",
+        "genre": "FPS",
+        "year": "2016",
+        "company": "블리자드"
+    },
+    {
+        "_id": 5,
+        "name": "메이플스토리",
+        "genre": "MMORPG",
+        "year": "2003",
+        "company": "Wizet"
+    }
+]
