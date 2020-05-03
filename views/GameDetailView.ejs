@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>GameDetail</title>
+    </head>
+    <body>
+        <h1>GameDetail</h1>
+            <ul><li>id : <%=info._id %></li>
+                <li>name : <%=info.name %></li>
+                <li>genre : <%=info.genre %></li>
+                <li>year : <%=info.year %></li>
+                <li>company : <%=info.company %></li>
+            </ul>
+            
+            <form name="detail" method="post" action="/games/<%=info._id %>">
+                <input type="hidden" name="_id" value="<%= info._id %>">
+                <input type="button" value="back" onclick="history.back(-1)">
+                <input type="button" value="Edit" onclick="location.href='/games/update/<%= info._id %>'">
+                <input type="submit" value="Delete">
+            </form>
+    </body>
+    </html>

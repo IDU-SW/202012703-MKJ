@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>GameList</title>
+    </head>
+    <body>
+        <h1>GameList</h1>
+        <input type="button" value="add" onclick="location.href='/games/add'">
+        <% data.forEach(function(item) {%>
+            <ul><li>_id : <a href='/games/<%=item._id %>'> <%=item._id %></a></li>
+                <li>name : <%=item.name %></li>
+                <li>genre : <%=item.genre %></li>
+                <li>year : <%=item.year %></li>
+                <li>company : <%=item.company %></li>
+            </ul>
+        <%}) 
+        %>
+    </body>
+</html>

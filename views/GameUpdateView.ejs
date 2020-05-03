@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>GameEdit</title>
+    </head>
+    <body>
+        <h1>GameEdit</h1> 
+        <form action="/games/update/<%=info._id %>" method="post" >
+            <pre>
+            _id : <input type="text" name="_id" value="<%= info._id %>" style="width:100px;" readonly></br>   
+            name    : <input type="text" name="name" value="<%= info.name %>" style="width:100px;"></br></br>
+            genre : <input type="text" name="genre" value="<%= info.genre %>" style="width:100px;"></br></br>
+            year  : <input type="text" name="year" value="<%= info.year %>" style="width:100px;"></br></br>
+            company  : <input type="text" name="company" value="<%= info.company %>" style="width:100px;"></br></br>
+            <p>
+            <input type="submit" value="Edit">
+            <input type="button" value="back" onclick="history.back(-1)">
+            </p>
+            </pre>
+        </form> 
+    </body>
+</html>
