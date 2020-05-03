@@ -4,18 +4,20 @@ const gameModel = require('../model/GameModel');
 
 
 router.get('/games', showGameList);
-router.get('/games/:_id', showGameDetail);
+router.get('/games/add', addGameView);
 router.post('/games', addGame);
-router.put('/games', updateGame);
-router.delete('/games/:_id', deleteGame);
+router.get('/games/:_id', showGameDetail);
+router.get('/games/update/:_id', updateGameView);
+router.post('/games/update/:_id', updateGame);
+router.post('/games/:_id', deleteGame);
 
 module.exports = router;
 
 // SHOW LIST
 function showGameList(req, res) {
     const gameList = gameModel.getGameList();
-    const result = { data:gameList, count:gameList.legth };
-    res.send(result);
+    // const result = { data:gameList, count:gameList.legth };
+    res.render('GameListView',{ data: gameList, count: gameList.legth});
 }
 
 // SHOW DETAIL
@@ -24,7 +26,8 @@ async function showGameDetail(req, res) {
         const _id = req.params._id;
         console.log('Game Id: ', _id);
         const info = await gameModel.getGameDetail(_id);
-        res.send(info);
+        res.render('GameDetailView',{info: info});
+        // res.send(info);
     } 
     catch (error) {
         console.log('Can not find, 404');
@@ -33,6 +36,10 @@ async function showGameDetail(req, res) {
 }
 
 // ADD
+function addGameView(req, res) {
+    res.render('GameAddView');
+}
+
 async function addGame(req, res) {
     const data = req.body;
     
@@ -65,6 +72,20 @@ async function deleteGame(req, res) {
 }
 
 // UPDATE
+async function updateGameView(req, res) {
+    try {
+        const _id = req.params._id;
+        console.log('Game Id: ', _id);
+        const info = await gameModel.getGameDetail(_id);
+        res.render('GameUpdateView',{info: info});
+        // res.send(info);
+    } 
+    catch (error) {
+        console.log('Can not find, 404');
+        res.status(error.code).send({msg:error.msg});
+    }
+}
+
 async function updateGame(req, res) {
     
     const data = req.body;
