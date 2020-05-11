@@ -14,8 +14,8 @@ router.post('/games/:_id', deleteGame);
 module.exports = router;
 
 // SHOW LIST
-function showGameList(req, res) {
-    const gameList = gameModel.getGameList();
+async function showGameList(req, res) {
+    const gameList = await gameModel.getGameList();
     // const result = { data:gameList, count:gameList.legth };
     res.render('GameListView',{ data: gameList, count: gameList.legth});
 }
@@ -26,7 +26,9 @@ async function showGameDetail(req, res) {
         const _id = req.params._id;
         console.log('Game Id: ', _id);
         const info = await gameModel.getGameDetail(_id);
-        res.render('GameDetailView',{info: info});
+        console.log('INFO: ', info);
+        
+        res.render('GameDetailView',{ info: info });
         // res.send(info);
     } 
     catch (error) {

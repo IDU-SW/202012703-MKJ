@@ -13,3 +13,7 @@ const gameRouter = require('./router/GameRouter');
 app.use(gameRouter);
 
 module.exports = app;
+
+
+
+
