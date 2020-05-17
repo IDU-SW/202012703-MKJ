@@ -17,7 +17,7 @@ module.exports = router;
 async function showGameList(req, res) {
     const gameList = await gameModel.getGameList();
     // const result = { data:gameList, count:gameList.legth };
-    res.render('GameListView',{ data: gameList, count: gameList.legth});
+    res.render('GameListView',{ data: gameList, count: gameList.length});
 }
 
 // SHOW DETAIL

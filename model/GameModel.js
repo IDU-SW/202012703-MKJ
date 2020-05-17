@@ -1,114 +1,132 @@
-const fs = require('fs');
-const pool = require('../db/connection');
+// const fs = require('fs');
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('gameList', 'dev', 'secret', {
+    dialect: 'mysql',
+    host: 'localhost'
+});
 
-class game {
+class Game extends Sequelize.Model {}
+
+Game.init({
+    _id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    name: Sequelize.STRING,
+    genre: Sequelize.STRING,
+    year: Sequelize.INTEGER,
+    company: Sequelize.STRING
+}, { tableName: 'games', timestamps: false, sequelize});
+
+class gameModel {
     constructor() {
-        const data = fs.readFileSync('./model/data.json');
-        this.data = JSON.parse(data);
+        try {
+            this.prepareModel();
+        } catch (error) {
+            console.error(error);
+        }
     }
 
+    async prepareModel() {
+        try {
+            await Game.sync({force:false});
+        }
+        catch(err) {
+            console.log('Game.sync ERROR: ', err);
+        }
+    }
+    
     async getGameList() {
-        let conn;
         try {
-            conn = await pool.getConnection();
-            const sql = 'SELECT * from gameList.games;';
-
-            const [rows, metadata] = await conn.query(sql);
-            conn.release();
-
-            return rows;
+            let result = [];
+            let ret = await Game.findAll({});
+            for(let item of ret) {
+                result.push(item.dataValues);
+            }
+            return result;
         }
         catch (err) {
             console.log('ERROR: ', err);
-        } finally {
-            if (conn)
-                conn.release();
-        }
+        } 
     }
-
+    
     async getGameDetail(_id) {
-        let conn;
         try {
-            conn = await pool.getConnection();
-            const sql = 'SELECT * from gameList.games where _id like ?;';
-            const value = _id;
-
-            const [rows, metadata] = await conn.query(sql, value);
-            conn.release();
-
-            return rows[0];
+            const ret = await Game.findByPk(_id);
+            if (ret) {
+                return ret.dataValues;
+            } else {
+                console.log('NO DATA');
+            }
         }
         catch (err) {
             console.log('ERROR: ', err);
-        } finally {
-            if (conn)
-                conn.release();
         }
     }
-
+    
     async addGame(data) {
-        let conn;
         try {
             console.log('START INSERT...');
-            conn = await pool.getConnection();
-            const sql = 'insert into gameList.games (name, genre, year, company) values (?, ?, ?, ?);';
-            const values = [data.name, data.genre, data.year, data.company];
-
-            const ret = await conn.query(sql, values);
-            conn.release();
-
-            return ret[0];
+            const ret = await Game.create({
+                name: data.name,
+                genre: data.genre,
+                year: data.year,
+                company: data.company
+            }, {log: false});
+            const newData = ret.dataValues;
+            return newData;
         }
         catch (err) {
             console.log('ERROR: ', err);
-        } finally {
-            if (conn)
-                conn.release();
         }
     }
-
+    
     async updateGame(data){
-        let conn;
         try {
             console.log('START UPDATE...');
-            conn = await pool.getConnection();
-            const sql = 'update gameList.games set name = ?, genre = ?, year = ?, company = ? where _id = ?;';
-            const values = [data.name, data.genre, data.year, data.company, data._id];
-
-            const ret = await conn.query(sql, values);
-            conn.release();
-
-            return ret[0];
+            const ret = await Game.update(
+                {   name: data.name,
+                    genre: data.genre,
+                    year: data.year,
+                    company: data.company },
+                { where: {
+                    _id: data._id 
+                }}
+            );
+    
+            if(ret) {
+                return ret;
+            } else {
+                console.log('CANNOT UPDATE');
+            }
         }
         catch (err) {
             console.log('ERROR: ', err);
-        } finally {
-            if (conn)
-                conn.release();
         }
     }
-
+    
     async deleteGame(_id){
-        let conn;
         try {
             console.log('START DELETE...');
-            conn = await pool.getConnection();
-            const sql = 'delete from gameList.games where _id = ?;';
-            const value = _id;
-
-            const ret = await conn.query(sql, value);
-            conn.release();
-
-            return ret[0];
+            await Game.destroy({
+                where: {
+                    _id: _id
+                }
+            })
+            .then(res => {
+                return res;
+            })
+            .catch(err => {
+                console.error('DELETE ERROR: ', err);
+            })
         }
         catch (err) {
             console.log('ERROR: ', err);
-        } finally {
-            if (conn)
-                conn.release();
         }
     }
 }
 
-module.exports = new game();
+
+module.exports = new gameModel();
 
