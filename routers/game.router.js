@@ -1,6 +1,5 @@
-const express = require('express');
-const router = express.Router();
-const gameModel = require('../model/GameModel');
+const router = require('express').Router();
+const Game = require('../services/game.service');
 
 
 router.get('/games', showGameList);
@@ -15,7 +14,7 @@ module.exports = router;
 
 // SHOW LIST
 async function showGameList(req, res) {
-    const gameList = await gameModel.getGameList();
+    const gameList = await Game.findAll();
     // const result = { data:gameList, count:gameList.legth };
     res.render('GameListView',{ data: gameList, count: gameList.length});
 }
@@ -25,7 +24,7 @@ async function showGameDetail(req, res) {
     try {
         const _id = req.params._id;
         console.log('Game Id: ', _id);
-        const info = await gameModel.getGameDetail(_id);
+        const info = await Game.getGameDetail(_id);
         console.log('INFO: ', info);
         
         res.render('GameDetailView',{ info: info });
