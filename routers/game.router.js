@@ -24,15 +24,14 @@ async function showGameDetail(req, res) {
     try {
         const _id = req.params._id;
         console.log('Game Id: ', _id);
-        const info = await Game.getGameDetail(_id);
-        console.log('INFO: ', info);
+        const info = await Game.findOneByGameid(_id);
         
         res.render('GameDetailView',{ info: info });
         // res.send(info);
     } 
     catch (error) {
-        console.log('Can not find, 404');
-        res.status(error.code).send({msg:error.msg});
+        console.log('Can not find, 404s');
+        console.error('FIND ONE ERROR: ', error);
     }
 }
 
@@ -52,7 +51,7 @@ async function addGame(req, res) {
     data.year = parseInt(req.body.year);
 
     try {
-        const result = await gameModel.addGame(data);
+        const result = await Game.create(data);
         res.send({msg:'success', data:result});
     } catch (error) {
         res.status(500).send(error.msg);
@@ -64,7 +63,7 @@ async function deleteGame(req, res) {
     try {
         const _id = req.params._id;
         console.log('DELETED GAME : ', _id);
-        const result = await gameModel.deleteGame(_id);
+        const result = await Game.deleteByGameid(_id);
         res.send({msg:'COMPLETE: DELETED GAME INFO', data:result});
     }
     catch ( error ) {
@@ -77,7 +76,7 @@ async function updateGameView(req, res) {
     try {
         const _id = req.params._id;
         console.log('Game Id: ', _id);
-        const info = await gameModel.getGameDetail(_id);
+        const info = await Game.findOneByGameid(_id);
         res.render('GameUpdateView',{info: info});
         // res.send(info);
     } 
@@ -105,7 +104,7 @@ async function updateGame(req, res) {
     }
 
     try {
-        const result = await gameModel.updateGame(data);
+        const result = await Game.updateByGameid(data._id, data);
         res.send({msg:'COMPLETE: UPDATED ' + data._id, data:result});
     }
     catch ( error ) {

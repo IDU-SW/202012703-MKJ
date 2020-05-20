@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: false}));
 mongoose.Promise = global.Promise;
 
 // CONNECT TO MONGODB SERVER
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true })
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
     .then( () => {
         console.log('Successfully connected to mongodb');
     })

@@ -15,18 +15,20 @@ Game.statics.findAll = function () {
 };
 
 // Find One Game by gameId
-Game.statics.findOneByGameid = function (gmaeId) {
-    return this.findOne({ gameId });
+Game.statics.findOneByGameid = function (gameId) {
+    console.log('GAME ID: ', gameId);
+
+    return this.findOne({ _id: gameId });
 };
 
 // Update by gameId
-Game.statics.updateByGameid = function (gmaeId, payload) {
-    return this.findOneAndUpdate({ gameId }, payload, { new: true });
+Game.statics.updateByGameid = function (gameId, payload) {
+    return this.findOneAndUpdate({ _id: gameId }, payload, { new: true });
 };
 
 // Delete by gameId
-Game.statics.deleteByGameid = function (gmaeId) {
-    return this.remove({ gameId });
+Game.statics.deleteByGameid = function (gameId) {
+    return this.findOneAndDelete({ _id: gameId });
 };
 
 // Create Model & Export
