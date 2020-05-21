@@ -1,6 +1,5 @@
-const express = require('express');
-const router = express.Router();
-const gameModel = require('../model/GameModel');
+const router = require('express').Router();
+const Service = require('../services/game.service');
 
 
 router.get('/games', showGameList);
@@ -15,7 +14,7 @@ module.exports = router;
 
 // SHOW LIST
 async function showGameList(req, res) {
-    const gameList = await gameModel.getGameList();
+    const gameList = await Service.getGameList();
     // const result = { data:gameList, count:gameList.legth };
     res.render('GameListView',{ data: gameList, count: gameList.length});
 }
@@ -25,7 +24,7 @@ async function showGameDetail(req, res) {
     try {
         const _id = req.params._id;
         console.log('Game Id: ', _id);
-        const info = await gameModel.getGameDetail(_id);
+        const info = await Service.getGameDetail(_id);
         console.log('INFO: ', info);
         
         res.render('GameDetailView',{ info: info });
@@ -53,7 +52,7 @@ async function addGame(req, res) {
     data.year = parseInt(req.body.year);
 
     try {
-        const result = await gameModel.addGame(data);
+        const result = await Service.addGame(data);
         res.send({msg:'success', data:result});
     } catch (error) {
         res.status(500).send(error.msg);
@@ -65,7 +64,7 @@ async function deleteGame(req, res) {
     try {
         const _id = req.params._id;
         console.log('DELETED GAME : ', _id);
-        const result = await gameModel.deleteGame(_id);
+        const result = await Service.deleteGame(_id);
         res.send({msg:'COMPLETE: DELETED GAME INFO', data:result});
     }
     catch ( error ) {
@@ -78,7 +77,7 @@ async function updateGameView(req, res) {
     try {
         const _id = req.params._id;
         console.log('Game Id: ', _id);
-        const info = await gameModel.getGameDetail(_id);
+        const info = await Service.getGameDetail(_id);
         res.render('GameUpdateView',{info: info});
         // res.send(info);
     } 
@@ -106,7 +105,7 @@ async function updateGame(req, res) {
     }
 
     try {
-        const result = await gameModel.updateGame(data);
+        const result = await Service.updateGame(data);
         res.send({msg:'COMPLETE: UPDATED ' + data._id, data:result});
     }
     catch ( error ) {

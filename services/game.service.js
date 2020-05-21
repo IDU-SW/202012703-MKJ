@@ -1,25 +1,8 @@
-// const fs = require('fs');
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize('gameList', 'dev', 'secret', {
-    dialect: 'mysql',
-    host: 'localhost'
-});
+const connect = require('../config');
+const Game = require('../models/game.model').init(connect);
 
-class Game extends Sequelize.Model {}
 
-Game.init({
-    _id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    name: Sequelize.STRING,
-    genre: Sequelize.STRING,
-    year: Sequelize.INTEGER,
-    company: Sequelize.STRING
-}, { tableName: 'games', timestamps: false, sequelize});
-
-class gameModel {
+class GameService {
     constructor() {
         try {
             this.prepareModel();
@@ -128,5 +111,4 @@ class gameModel {
 }
 
 
-module.exports = new gameModel();
-
+module.exports = new GameService();
