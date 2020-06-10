@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>UserList</title>
+    </head>
+    <body>
+        <h1>UserList</h1>
+        <input type="button" value="add" onclick="location.href='/users/add'">
+        <% data.forEach(function(item) {%>
+            <ul><li>_id : <a href='/users/<%=item._id %>'> <%=item._id %></a></li>
+                <li>email : <%=item.email %></li>
+                <li>password : <%=item.password %></li>
+                <li>name : <%=item.name %></li>
+                <li>genre : <%=item.birth %></li>
+                <li>year : <%=item.phone %></li>
+            </ul>
+        <%}) 
+        %>
+    </body>
+</html>

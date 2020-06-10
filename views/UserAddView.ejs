@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>UserAdd</title>
+    </head>
+    <body>
+        <h1>UserAdd</h1>
+        <form action= "/users" method="post" >
+            <pre>
+            email : <input type="text" name="email" style="width:100px;"></br></br>
+            password : <input type="text" name="password" style="width:100px;"></br></br>
+            name : <input type="text" name="name" style="width:100px;"></br></br>
+            birth  : <input type="text" name="birth1" style="width:50px;" maxlength="4">년 <input type="text" name="birth2" style="width:30px;" maxlength="2">월 <input type="text" name="birth3" style="width:30px;" maxlength="2">일</br></br>
+            phone : <input type="text" name="phone1" style="width:50px;"> - <input type="text" name="phone2" style="width:50px;"> - <input type="text" name="phone3" style="width:50px;"></br></br>
+            <p>
+                <input type="submit" value="add">  <input type="button" value="back" onclick="history.back(-1)">
+            </p>
+            </pre>
+        </form>
+    </body>
+</html>
