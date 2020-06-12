@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>UserEdit</title>
+    </head>
+    <body>
+        <h1>UserEdit</h1> 
+        <form action="/users/update/<%=info._id %>" method="post" >
+            <pre>
+            _id : <input type="text" name="_id" value="<%= info._id %>" style="width:100px;" readonly></br>
+            email    : <input type="text" name="email" value="<%= info.email %>" style="width:100px;"></br></br>
+            password    : <input type="text" name="password" value="<%= info.password %>" style="width:100px;"></br></br>   
+            name    : <input type="text" name="name" value="<%= info.name %>" style="width:100px;"></br></br>
+            birth : <input type="text" name="birth" value="<%= info.birth %>" style="width:100px;"></br></br>
+            phone  : <input type="text" name="phone" value="<%= info.phone %>" style="width:100px;"></br></br>
+            <p>
+            <input type="submit" value="Edit"> <input type="button" value="back" onclick="history.back(-1)">
+            </p>
+            </pre>
+        </form> 
+    </body>
+</html>

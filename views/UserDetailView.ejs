@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>UserDetail</title>
+    </head>
+    <body>
+        <h1>UserDetail</h1>
+            <ul><li>id : <%=info._id %></li>
+                <li>email : <%=info.email %></li>
+                <li>password : <%=info.password %></li>
+                <li>name : <%=info.name %></li>
+                <li>birth : <%=info.birth %></li>
+                <li>phone : <%=info.phone %></li>
+            </ul>
+            
+            <form name="detail" method="post" action="/users/<%=info._id %>">
+                <input type="hidden" name="_id" value="<%= info._id %>">
+                <input type="button" value="back" onclick="history.back(-1)">
+                <input type="button" value="Edit" onclick="location.href='/users/update/<%= info._id %>'">
+                <input type="submit" value="Delete">
+            </form>
+    </body>
+    </html>

@@ -35,40 +35,57 @@ class UserService {
         } 
     }
 
-    async loginUser(data) {
+    async getUserByEmail(data) {
         try {
             let ret = await User.findOne({
                 where: {
-                    email: data.email,
-                    password: data.password
+                    email: data
+                }
+            });       
+            return ret;
+        }
+        catch (err) {
+            console.log('ERROR: ', err);
+        }
+    }
+
+    async setUserToken(data) {
+        console.log('DATA: ',data);
+        try {
+            const token = await this.issueToken(data.email, data.name);
+            const ret = await User.update({
+                token: token
+            }, {
+                where: {
+                    _id: data._id
                 }
             });
-            
-            if (ret !== null) {
-                const token = await this.issueToken(ret.name, ret.email);
-                const rup = await User.update({
-                    token: token
-                }, {
-                    where: {
-                        _id: ret._id
-                    }
-                });
-                console.log('SUCCESS UPDATE TOKEN: ', rup);
 
-                return ret;
-            } else {
-                console.log('NOT EXIST USER');
-                return "null";
-            }
+            return token;
         }
         catch (err) {
             console.log('ERROR: ', err);
         } 
     }
-    
-    async getUserDetail(_id) {
+
+    async getUserbyToken(data) {
         try {
-            const ret = await Game.findByPk(_id);
+            const ret = await User.findOne({
+                where: {
+                    token: data
+                }
+            });
+
+            return ret;
+        }
+        catch (err) {
+            console.log('ERROR: ', err);
+        }
+    }
+    
+    async getUserbyId(_id) {
+        try {
+            const ret = await User.findByPk(_id);
             if (ret) {
                 return ret.dataValues;
             } else {
@@ -105,14 +122,17 @@ class UserService {
         }
     }
     
-    async updateGame(data){
+    async updateUser(data){
         try {
             console.log('START UPDATE...');
-            const ret = await Game.update(
-                {   name: data.name,
-                    genre: data.genre,
-                    year: data.year,
-                    company: data.company },
+            const ret = await User.update(
+                {   
+                    email: data.email,
+                    password: data.password,
+                    name: data.name,
+                    birth: data.birth,
+                    phone: data.phone
+                },
                 { where: {
                     _id: data._id 
                 }}
@@ -153,7 +173,7 @@ class UserService {
         const secretKey = "SWIFT-UI";
         const expire = 60 * 60 * 24;
         const payload = {
-            eamil: email,
+            email: email,
             name: name,
             iat: Date.now()
         };
