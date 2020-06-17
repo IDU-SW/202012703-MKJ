@@ -19,6 +19,7 @@ class User extends Sequelize.Model {
                 allowNull: true
             },
         }, { 
+            charset: 'utf8',
             tableName: 'users', 
             timestamps: true,
             freezeTableName: true,

@@ -17,6 +17,11 @@ const connect = new Sequelize(db, user, password, {
     port: port,
     logging: console.log,
     maxConcurrentQueries: 100,
+    define: {
+        charset: 'utf8',
+        collate: 'utf8_general_ci', 
+        timestamps: true
+      }
 });
 
 connect.authenticate()

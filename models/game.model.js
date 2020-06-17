@@ -13,7 +13,8 @@ class Game extends Sequelize.Model {
             genre: { type: Sequelize.STRING },
             year: { type: Sequelize.INTEGER },
             company: { type: Sequelize.STRING },
-        }, { 
+        }, {
+            charset: 'utf8', 
             tableName: 'games', 
             timestamps: false,
             freezeTableName: true,

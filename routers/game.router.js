@@ -25,7 +25,6 @@ async function showGameDetail(req, res) {
         const _id = req.params._id;
         console.log('Game Id: ', _id);
         const info = await Service.getGameDetail(_id);
-        console.log('INFO: ', info);
         
         res.render('GameDetailView',{ info: info });
         // res.send(info);
