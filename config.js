@@ -1,15 +1,22 @@
 require('dotenv').config();
 
 const Sequelize = require('sequelize');
-const db = process.env.MYSQL_DB;
-const user = process.env.MYSQL_USER;
-const password = process.env.MYSQL_PW;
-const url = process.env.MYSQL_URL;
+const db = process.env.RDS_DB;
+const user = process.env.RDS_USER;
+const password = process.env.RDS_PW;
+const host = process.env.RDS_HOST;
+const port = process.env.RDS_PORT;
+
 
 const connect = new Sequelize(db, user, password, {
     dialect: 'mysql',
-    host: url,
-    logging: console.log
+    dialecltOptions: {
+        ssl:'Amazon RDS'
+    },
+    host: host,
+    port: port,
+    logging: console.log,
+    maxConcurrentQueries: 100,
 });
 
 connect.authenticate()
