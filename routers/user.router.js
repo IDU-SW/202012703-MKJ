@@ -1,22 +1,24 @@
 const router = require('express').Router();
 const Service = require('../services/user.service');
 const jwt = require('jsonwebtoken');
+const s3 = require('../utils/s3.utils');
 
+router.get('/users', userLoginView);
+router.get('/users/list', userListView);
+router.get('/users/add', userAddView);
+router.get('/users/:_id', userDetailView);
+router.get('/users/update/:_id', userUpdateView);
 
-router.get('/users', showUserLogin);
-router.get('/users/list', showUserList);
-router.get('/users/add', addUserView);
 router.post('/users', addUser);
 router.post('/users/login', loginUser)
-router.get('/users/:_id', showUserDetail);
-router.get('/users/update/:_id', updateUserView);
 router.post('/users/update/:_id', updateUser);
-router.post('/users/:_id', deleteGame);
+router.post('/users/:_id', deleteUser);
+router.post('/upload',  s3.S3Upload.single('imgFile'), userImgUpload);
 
 module.exports = router;
 
 // SHOW LIST
-async function showUserList(req, res) {
+async function userListView(req, res) {
     const sess = req.session;
     
     if (sess.token) {
@@ -42,7 +44,7 @@ async function showUserList(req, res) {
     
 }
 
-async function showUserLogin(req, res) {
+async function userLoginView(req, res) {
     const sess = req.session;
 
     console.log('SESSION: ', sess);
@@ -75,7 +77,6 @@ async function loginUser(req, res) {
     try {
         const info = await Service.getUserByEmail(data.email);
 
-        console.log('INFO: ', info);
         const user = info.dataValues;
         if (user) {
             if (user.password === data.password) {
@@ -102,7 +103,7 @@ async function loginUser(req, res) {
 }
 
 // SHOW DETAIL
-async function showUserDetail(req, res) {
+async function userDetailView(req, res) {
     const sess = req.session;
     
     if (sess.token) {
@@ -126,7 +127,7 @@ async function showUserDetail(req, res) {
 }
 
 // ADD
-function addUserView(req, res) {
+function userAddView(req, res) {
     res.render('UserAddView');
 }
 
@@ -157,7 +158,7 @@ async function addUser(req, res) {
 }
 
 // DELETE
-async function deleteGame(req, res) {
+async function deleteUser(req, res) {
     const sess = req.session;
     
     if (sess.token) {
@@ -181,7 +182,7 @@ async function deleteGame(req, res) {
 }
 
 // UPDATE
-async function updateUserView(req, res) {
+async function userUpdateView(req, res) {
     try {
         const _id = req.params._id;
         console.log('Game Id: ', _id);
@@ -238,6 +239,10 @@ async function updateUser(req, res) {
     } else {
         res.render('UserLoginView');
     }
-
-    
 }
+
+async function userImgUpload(req, res) {
+    let imgFile = req.files;
+    res.json(imgFile);
+}
+

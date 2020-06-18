@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/IDU-SW/202012703-MKJ#readme",
   "dependencies": {
+    "aws-sdk": "^2.699.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
@@ -25,6 +26,9 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.26.0",
+    "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
     "mysql2": "^2.1.0",
     "sequelize": "^5.21.9",
     "socket.io": "^2.3.0"
