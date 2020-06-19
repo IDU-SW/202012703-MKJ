@@ -82,6 +82,14 @@ class UserController {
         }
     }
 
+    async logoutUser(req, res) {
+        await req.session.destroy( (err) => {
+            if (err) res.status(401).send({msg: err});
+            
+            res.redirect('/users');
+        });
+    }
+
     // SHOW DETAIL
     async userDetailView(req, res) {
         const sess = req.session;
@@ -249,7 +257,9 @@ class UserController {
                     console.log('DECODED: ', decoded);
                     const user = await Service.getUserbyToken(sess.token);
                     
-                    if (req.fileValidationError) 
+                    if(!req.file){
+                        res.status(400).send({msg: 'Not Exist Image File'});
+                    } else if (req.fileValidationError) 
                         res.status(400).send({msg: req.fileValidationError});
                     else {
                         console.log(req.file.location);

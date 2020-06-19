@@ -70,7 +70,7 @@ class UserService {
                     _id: data._id
                 }
             });
-            
+
             if (res)
                 return token;
             else   
@@ -87,7 +87,7 @@ class UserService {
                 where: {
                     token: data
                 }
-            })
+            });
 
             if (res)
                 return res.dataValues;

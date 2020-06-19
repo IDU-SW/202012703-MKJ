@@ -12,14 +12,22 @@ const s3 = new AWS.S3({
 });
 
 const fileFilter = (req, file, cb) => {
-    let array = file.originalname.split('.');
-    console.log('ARRAY: ', array);
-    const fileType = array[1];
-    if (fileType === 'jpg' || fileType === 'png' || fileType === 'jpeg' || fileType === 'gif') {
-        cb(null, true);
-    } else {
-        req.fileValidationError = "Can Only jpg, jpeg, png, gif";
+
+    console.log('FILE: ', file);
+    
+    if (!file) {
+        req.fileValidationError = "Not Exist Image File";
         cb(null, false);
+    } else {
+        let array = file.originalname.split('.');
+        console.log('ARRAY: ', array);
+        const fileType = array[1];
+        if (fileType === 'jpg' || fileType === 'png' || fileType === 'jpeg' || fileType === 'gif') {
+            cb(null, true);
+        } else {
+            req.fileValidationError = "Can Only jpg, jpeg, png, gif";
+            cb(null, false);
+        }
     }
 };
 

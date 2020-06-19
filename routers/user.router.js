@@ -11,6 +11,14 @@ router.get('/users', userController.userLoginView);
  *
  * @apiSuccess {View} UserLoginView
  */
+router.get('/users/logout', sessCheck, userController.logoutUser);
+/**
+ * @api {get} /users/logout
+ * @apiGroup User
+ * @apiName User Logout
+ *
+ * @apiSuccess {View} UserLoginView
+ */
 router.get('/users/list', sessCheck, userController.userListView);
 /**
  * @api {get} /users/list
@@ -27,6 +35,14 @@ router.get('/users/add', userController.userAddView);
  *
  * @apiSuccess {View} UserAddView
  */
+router.get('/users/imgUpload', sessCheck, userController.userUploadView);
+/**
+ * @api {get} /users/upload
+ * @apiGroup User
+ * @apiName User Image Upload View
+ *
+ * @apiSuccess {View} UserImageUploadView
+ */
 router.get('/users/:_id', sessCheck, userController.userDetailView);
 /**
  * @api {get} /users/:_id
@@ -42,14 +58,6 @@ router.get('/users/update/:_id', sessCheck, userController.userUpdateView);
  * @apiName User Update View
  *
  * @apiSuccess {View} UserUpdateView
- */
-router.get('/users/upload', sessCheck, userController.userUploadView);
-/**
- * @api {get} /users/upload
- * @apiGroup User
- * @apiName User Image Upload View
- *
- * @apiSuccess {View} UserImageUploadView
  */
 router.get('/users/delete', sessCheck, userController.userDeleteView);
 /**
