@@ -24,11 +24,17 @@ class UserService {
     async getUserList() {
         try {
             let result = [];
-            let ret = await User.findAll({});
-            for(let item of ret) {
-                result.push(item.dataValues);
+            const res = await User.findAll({});
+
+            if (res) {
+                for(let item of res) {
+                    result.push(item.dataValues);
+                }
+                return result;
             }
-            return result;
+            else
+                return '';
+            
         }
         catch (err) {
             console.log('ERROR: ', err);
@@ -37,12 +43,16 @@ class UserService {
 
     async getUserByEmail(data) {
         try {
-            let ret = await User.findOne({
+            const res = await User.findOne({
                 where: {
                     email: data
                 }
-            });       
-            return ret;
+            })
+
+            if (res)
+                return res.dataValues;
+            else
+                return '';   
         }
         catch (err) {
             console.log('ERROR: ', err);
@@ -53,15 +63,18 @@ class UserService {
         console.log('DATA: ',data);
         try {
             const token = await this.issueToken(data.email, data.name);
-            const ret = await User.update({
+            const res = await User.update({
                 token: token
             }, {
                 where: {
                     _id: data._id
                 }
             });
-
-            return token;
+            
+            if (res)
+                return token;
+            else   
+                return '';
         }
         catch (err) {
             console.log('ERROR: ', err);
@@ -70,13 +83,16 @@ class UserService {
 
     async getUserbyToken(data) {
         try {
-            const ret = await User.findOne({
+            const res = await User.findOne({
                 where: {
                     token: data
                 }
-            });
+            })
 
-            return ret;
+            if (res)
+                return res.dataValues;
+            else
+                return '';
         }
         catch (err) {
             console.log('ERROR: ', err);
@@ -85,12 +101,12 @@ class UserService {
     
     async getUserbyId(_id) {
         try {
-            const ret = await User.findByPk(_id);
-            if (ret) {
-                return ret.dataValues;
-            } else {
-                console.log('NO DATA');
-            }
+            const res = await User.findByPk(_id);
+
+            if (res) 
+                return res.dataValues;
+            else 
+                return '';
         }
         catch (err) {
             console.log('ERROR: ', err);
@@ -105,7 +121,7 @@ class UserService {
             const created = Date.now();
             const updated = Date.now();
 
-            const ret = await User.create({
+            const res = await User.create({
                 email: data.email,
                 password: data.password,
                 name: data.name,
@@ -113,9 +129,14 @@ class UserService {
                 phone: phone,
                 createdAt: created,
                 updatedAt: updated
-            }, {log: false});
-            const newData = ret.dataValues;
-            return newData;
+            }, { 
+                log: false
+            });
+
+            if (res)
+                return res.dataValues;
+            else
+                return '';
         }
         catch (err) {
             console.log('ERROR: ', err);
@@ -125,7 +146,7 @@ class UserService {
     async updateUser(data){
         try {
             console.log('START UPDATE...');
-            const ret = await User.update(
+            const res = await User.update(
                 {   
                     email: data.email,
                     password: data.password,
@@ -137,12 +158,11 @@ class UserService {
                     _id: data._id 
                 }}
             );
-    
-            if(ret) {
-                return ret;
-            } else {
-                console.log('CANNOT UPDATE');
-            }
+
+            if (res)
+                return res;
+            else
+                return '';
         }
         catch (err) {
             console.log('ERROR: ', err);
@@ -152,7 +172,7 @@ class UserService {
     async updateUserImage(data) {
         try {
             console.log('START UPDATE...');
-            const ret = await User.update(
+            const res = await User.update(
                 {
                     imgUrl: data.imgUrl
                 },
@@ -163,31 +183,29 @@ class UserService {
                 }
             );
 
-            if(ret) {
-                return ret;
-            } else {
-                console.log('CANNOT UPDATE');
-            }
+            if (res)
+                return res;
+            else
+                return '';
         }
         catch (err) {
             console.log('ERROR: ', err);
         }
     }
     
-    async deleteGame(_id){
+    async deleteUser(_id){
         try {
             console.log('START DELETE...');
-            await Game.destroy({
+            const res = await User.destroy({
                 where: {
                     _id: _id
                 }
-            })
-            .then(res => {
+            });
+
+            if (res)
                 return res;
-            })
-            .catch(err => {
-                console.error('DELETE ERROR: ', err);
-            })
+            else
+                return '';
         }
         catch (err) {
             console.log('ERROR: ', err);
