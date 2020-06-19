@@ -148,6 +148,31 @@ class UserService {
             console.log('ERROR: ', err);
         }
     }
+
+    async updateUserImage(data) {
+        try {
+            console.log('START UPDATE...');
+            const ret = await User.update(
+                {
+                    imgUrl: data.imgUrl
+                },
+                {
+                    where: {
+                        _id: data._id
+                    }
+                }
+            );
+
+            if(ret) {
+                return ret;
+            } else {
+                console.log('CANNOT UPDATE');
+            }
+        }
+        catch (err) {
+            console.log('ERROR: ', err);
+        }
+    }
     
     async deleteGame(_id){
         try {

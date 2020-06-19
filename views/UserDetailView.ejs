@@ -10,12 +10,16 @@
                 <li>name : <%=info.name %></li>
                 <li>birth : <%=info.birth %></li>
                 <li>phone : <%=info.phone %></li>
+                <%if(info.imgUrl) {%>
+                <li>image: <img src="<%=info.imgUrl %>" alt="User Image" width="200"></li>
+                <%} %>
             </ul>
             
             <form name="detail" method="post" action="/users/<%=info._id %>">
                 <input type="hidden" name="_id" value="<%= info._id %>">
                 <input type="button" value="back" onclick="history.back(-1)">
                 <input type="button" value="Edit" onclick="location.href='/users/update/<%= info._id %>'">
+                <input type="button" value="imgUpload" onclick="location.href='/upload'">
                 <input type="submit" value="Delete">
             </form>
     </body>

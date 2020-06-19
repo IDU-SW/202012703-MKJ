@@ -18,6 +18,10 @@ class User extends Sequelize.Model {
                 type: Sequelize.STRING,
                 allowNull: true
             },
+            imgUrl: { 
+                type: Sequelize.STRING,
+                allowNull: true 
+            },
         }, { 
             charset: 'utf8',
             tableName: 'users', 

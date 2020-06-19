@@ -2,18 +2,21 @@ const router = require('express').Router();
 const Service = require('../services/user.service');
 const jwt = require('jsonwebtoken');
 const s3 = require('../utils/s3.utils');
+const { sessCheck } = require('../utils/session.utils');
 
 router.get('/users', userLoginView);
-router.get('/users/list', userListView);
+router.get('/users/list', sessCheck, userListView);
 router.get('/users/add', userAddView);
-router.get('/users/:_id', userDetailView);
-router.get('/users/update/:_id', userUpdateView);
+router.get('/users/:_id', sessCheck, userDetailView);
+router.get('/users/update/:_id', sessCheck, userUpdateView);
+router.get('/upload', sessCheck, userUploadView);
 
+
+router.post('/users/upload', sessCheck, s3.s3Upload.single('imgFile'), userImgUpload);
 router.post('/users', addUser);
 router.post('/users/login', loginUser)
-router.post('/users/update/:_id', updateUser);
-router.post('/users/:_id', deleteUser);
-router.post('/upload',  s3.S3Upload.single('imgFile'), userImgUpload);
+router.post('/users/update/:_id', sessCheck, updateUser);
+router.post('/users/:_id', sessCheck, deleteUser);
 
 module.exports = router;
 
@@ -21,27 +24,22 @@ module.exports = router;
 async function userListView(req, res) {
     const sess = req.session;
     
-    if (sess.token) {
-        jwt.verify(sess.token, 'SWIFT-UI', async (err, decoded) => {
-            if (!err) {
-                console.log('DECODED: ', decoded);
-                const user = await Service.getUserByEmail(decoded.email);
+    jwt.verify(sess.token, 'SWIFT-UI', async (err, decoded) => {
+        if (!err) {
+            console.log('DECODED: ', decoded);
+            const user = await Service.getUserByEmail(decoded.email);
 
-                if (user.token === sess.token) {
-                    const userList = await Service.getUserList();
-                    res.render('UserListView',{ data: userList, count: userList.length});
-                } else {
-                    res.status(401).send({msg: 'UnAuthorized'});
-                }
+            if (user.token === sess.token) {
+                const userList = await Service.getUserList();
+                res.render('UserListView',{ data: userList, count: userList.length});
             } else {
                 res.status(401).send({msg: 'UnAuthorized'});
             }
-        })
-    } else {
-        res.render('UserLoginView');
-    }
-    // const result = { data:gameList, count:gameList.legth };
-    
+        } else {
+            res.status(401).send({msg: 'UnAuthorized'});
+        }
+    })
+    // const result = { data:gameList, count:gameList.legth }; 
 }
 
 async function userLoginView(req, res) {
@@ -106,24 +104,20 @@ async function loginUser(req, res) {
 async function userDetailView(req, res) {
     const sess = req.session;
     
-    if (sess.token) {
-        jwt.verify(sess.token, 'SWIFT-UI', async (err, decoded) => {
-            if (!err) {
-                try {
-                    console.log('DECODED: ', decoded);
-                    const user = await Service.getUserbyToken(sess.token);
-                    res.render('UserDetailView',{ info: user });
-                }
-                catch (err) {
-                    res.status(err.code).send({msg: 'UnAuthorized'});
-                }
-            } else {
-                res.status(401).send({msg: 'UnAuthorized'});
+    jwt.verify(sess.token, 'SWIFT-UI', async (err, decoded) => {
+        if (!err) {
+            try {
+                console.log('DECODED: ', decoded);
+                const user = await Service.getUserbyToken(sess.token);
+                res.render('UserDetailView',{ info: user });
             }
-        })
-    } else {
-        res.render('UserLoginView');
-    }
+            catch (err) {
+                res.status(err.code).send({msg: 'UnAuthorized'});
+            }
+        } else {
+            res.status(401).send({msg: 'UnAuthorized'});
+        }
+    })
 }
 
 // ADD
@@ -161,24 +155,20 @@ async function addUser(req, res) {
 async function deleteUser(req, res) {
     const sess = req.session;
     
-    if (sess.token) {
-        jwt.verify(sess.token, 'SWIFT-UI', async (err, decoded) => {
-            if (!err) {
-                try {
-                    console.log('DECODED: ', decoded);
-                    const user = await Service.getUserbyToken(sess.token);
-                    res.render('UserUpdateView',{ info: user });
-                }
-                catch (err) {
-                    res.status(err.code).send({msg: 'UnAuthorized'});
-                }
-            } else {
-                res.status(401).send({msg: 'UnAuthorized'});
+    jwt.verify(sess.token, 'SWIFT-UI', async (err, decoded) => {
+        if (!err) {
+            try {
+                console.log('DECODED: ', decoded);
+                const user = await Service.getUserbyToken(sess.token);
+                res.render('UserUpdateView',{ info: user });
             }
-        })
-    } else {
-        res.render('UserLoginView');
-    }
+            catch (err) {
+                res.status(err.code).send({msg: 'UnAuthorized'});
+            }
+        } else {
+            res.status(401).send({msg: 'UnAuthorized'});
+        }
+    })
 }
 
 // UPDATE
@@ -213,36 +203,66 @@ async function updateUser(req, res) {
         return;
     }
 
-    if (sess.token) {
-        jwt.verify(sess.token, 'SWIFT-UI', async (err, decoded) => {
-            if (!err) {
-                try {
-                    console.log('DECODED: ', decoded);
-                    const user = await Service.getUserbyToken(sess.token);
+    jwt.verify(sess.token, 'SWIFT-UI', async (err, decoded) => {
+        if (!err) {
+            try {
+                console.log('DECODED: ', decoded);
+                const user = await Service.getUserbyToken(sess.token);
 
-                    try {
-                        const result = await Service.updateUser(data);
-                        res.status(200).render('UserDetailView',{ info: data });
-                    }
-                    catch (err) {
-                        console.error(err);
-                        res.status(500).send({error:'FAILED: UPDATE USER INFO', data: err});
-                    }
+                try {
+                    const result = await Service.updateUser(data);
+                    res.status(200).render('UserDetailView',{ info: data });
                 }
                 catch (err) {
-                    res.status(err.code).send({msg: 'UnAuthorized'});
+                    console.error(err);
+                    res.status(500).send({error:'FAILED: UPDATE USER INFO', data: err});
                 }
-            } else {
-                res.status(401).send({msg: 'UnAuthorized'});
             }
-        })
-    } else {
-        res.render('UserLoginView');
+            catch (err) {
+                res.status(err.code).send({msg: 'UnAuthorized'});
+            }
+        } else {
+            res.status(401).send({msg: 'UnAuthorized'});
+        }
+    })
+}
+
+
+
+async function userUploadView(req, res) {
+    try {
+        res.render('UserImageUploadView');
+        // res.send(info);
+    } 
+    catch (error) {
+        console.log('Can not find, 404');
+        res.status(error.code).send({msg:error.msg});
     }
 }
 
 async function userImgUpload(req, res) {
-    let imgFile = req.files;
-    res.json(imgFile);
+    const sess = req.session;
+    
+    jwt.verify(sess.token, 'SWIFT-UI', async (err, decoded) => {
+        if (!err) {
+            try {
+                console.log('DECODED: ', decoded);
+                const user = await Service.getUserbyToken(sess.token);
+                
+                if (req.fileValidationError) 
+                    res.status(400).send({msg: req.fileValidationError});
+                else {
+                    console.log(req.file.location);
+                    user.imgUrl = req.file.location;
+                    const result = await Service.updateUserImage(user);
+                    res.status(200).send({msg:result});
+                }
+            }
+            catch (err) {
+                res.status(err.code).send({msg: 'UnAuthorized'});
+            }
+        } else {
+            res.status(401).send({msg: 'UnAuthorized'});
+        }
+    })
 }
-
